@@ -1,0 +1,90 @@
+# ==========================================
+# Maven build artifacts
+# ==========================================
+target/
+dependency-reduced-pom.xml
+*.jar
+*.war
+*.ear
+
+# ==========================================
+# Sensitive / secret files
+# ==========================================
+# Ethereum node passwords
+docker/password*.txt
+docker/password.txt
+docker/PASSWORDS.md
+docker/PASSWORD_REFERENCE.txt
+
+# Ethereum keystore (private keys) - NEVER commit
+docker/keystore/
+
+# Blockchain node chain data
+docker/nodes/
+
+# Frontend environment (keep .env.example)
+frontend/.env
+.env
+!.env.example
+
+# ==========================================
+# Local tooling (large binaries)
+# ==========================================
+java-app/.tools/
+
+# ==========================================
+# Logs
+# ==========================================
+*.log
+logs/
+java-app/experiment-logs.log
+
+# ==========================================
+# IDE - IntelliJ IDEA
+# ==========================================
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries/
+.idea/shelf/
+.idea/httpRequests/
+.idea/dataSources/
+.idea/dataSources.local.xml
+.idea/dynamic.classpath
+*.iml
+
+# ==========================================
+# IDE - VS Code
+# ==========================================
+.vscode/
+
+# ==========================================
+# Claude Code local config
+# ==========================================
+.claude/
+
+# ==========================================
+# Frontend - Node.js
+# ==========================================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# ==========================================
+# OS generated files
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Windows reserved device name artifact
+/nul
+
+# Claude Code temporary working files
+tmpclaude-*
+
+# ==========================================
+# Misplaced IDE files in src/
+# ==========================================
+java-app/src/.idea/

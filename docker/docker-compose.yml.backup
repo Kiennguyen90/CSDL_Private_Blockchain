@@ -1,0 +1,127 @@
+version: "3.8"
+
+services:
+  node1-validator:
+    image: ethereum/client-go:latest
+    container_name: eth-node1-validator
+    hostname: node1
+    networks:
+      - eth-private-net
+    ports:
+      - "8545:8545"      # HTTP RPC
+      - "8546:8546"      # WebSocket
+      - "30303:30303"    # P2P
+    volumes:
+      - ./genesis.json:/genesis.json
+      - node1-data:/root/.ethereum
+    command: >
+      --networkid 2025
+      --http
+      --http.addr 0.0.0.0
+      --http.port 8545
+      --http.api "eth,net,web3,personal,miner,admin,debug,clique"
+      --http.corsdomain "*"
+      --ws
+      --ws.addr 0.0.0.0
+      --ws.port 8546
+      --ws.api "eth,net,web3,personal,miner,admin,debug,clique"
+      --ws.origins "*"
+      --datadir /root/.ethereum
+      --allow-insecure-unlock
+      --mine
+      --miner.etherbase 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+      --unlock 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+      --password /dev/null
+      --nodiscover
+      --maxpeers 25
+      --verbosity 3
+    healthcheck:
+      test: ["CMD", "geth", "attach", "--exec", "eth.blockNumber"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  node2-full:
+    image: ethereum/client-go:latest
+    container_name: eth-node2-full
+    hostname: node2
+    networks:
+      - eth-private-net
+    ports:
+      - "8547:8545"
+      - "8548:8546"
+      - "30304:30303"
+    volumes:
+      - ./genesis.json:/genesis.json
+      - node2-data:/root/.ethereum
+    command: >
+      --networkid 2025
+      --http
+      --http.addr 0.0.0.0
+      --http.port 8545
+      --http.api "eth,net,web3,personal,admin,debug"
+      --http.corsdomain "*"
+      --ws
+      --ws.addr 0.0.0.0
+      --ws.port 8546
+      --ws.api "eth,net,web3,personal,admin,debug"
+      --ws.origins "*"
+      --datadir /root/.ethereum
+      --allow-insecure-unlock
+      --nodiscover
+      --maxpeers 25
+      --verbosity 3
+    depends_on:
+      - node1-validator
+    healthcheck:
+      test: ["CMD", "geth", "attach", "--exec", "eth.blockNumber"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  node3-recovery:
+    image: ethereum/client-go:latest
+    container_name: eth-node3-recovery
+    hostname: node3
+    networks:
+      - eth-private-net
+    ports:
+      - "8549:8545"
+      - "8550:8546"
+      - "30305:30303"
+    volumes:
+      - ./genesis.json:/genesis.json
+      - node3-data:/root/.ethereum
+    command: >
+      --networkid 2025
+      --http
+      --http.addr 0.0.0.0
+      --http.port 8545
+      --http.api "eth,net,web3,personal,admin,debug"
+      --http.corsdomain "*"
+      --ws
+      --ws.addr 0.0.0.0
+      --ws.port 8546
+      --ws.api "eth,net,web3,personal,admin,debug"
+      --ws.origins "*"
+      --datadir /root/.ethereum
+      --allow-insecure-unlock
+      --nodiscover
+      --maxpeers 25
+      --verbosity 3
+    depends_on:
+      - node1-validator
+    healthcheck:
+      test: ["CMD", "geth", "attach", "--exec", "eth.blockNumber"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  eth-private-net:
+    driver: bridge
+
+volumes:
+  node1-data:
+  node2-data:
+  node3-data:
