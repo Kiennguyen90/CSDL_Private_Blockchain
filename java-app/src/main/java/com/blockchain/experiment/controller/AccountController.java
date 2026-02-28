@@ -37,7 +37,7 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> createAccount(
-            @RequestParam(required = false) String name) throws Exception {
+            @RequestParam(name = "name", required = false) String name) throws Exception {
         AccountService.AccountInfo account = accountService.createAccount(name);
         Map<String, String> body = new LinkedHashMap<>();
         body.put("address", account.address);
@@ -60,7 +60,7 @@ public class AccountController {
     }
 
     @GetMapping("/{address}")
-    public ResponseEntity<Map<String, String>> getAccount(@PathVariable String address) {
+    public ResponseEntity<Map<String, String>> getAccount(@PathVariable("address") String address) {
         if (!isValidAddress(address)) {
             return ResponseEntity.badRequest().body(error("Invalid Ethereum address"));
         }
@@ -78,7 +78,7 @@ public class AccountController {
     }
 
     @GetMapping("/{address}/balance")
-    public ResponseEntity<Map<String, String>> getBalance(@PathVariable String address) throws Exception {
+    public ResponseEntity<Map<String, String>> getBalance(@PathVariable("address") String address) throws Exception {
         if (!isValidAddress(address)) {
             return ResponseEntity.badRequest().body(error("Invalid Ethereum address"));
         }
